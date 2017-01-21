@@ -6,10 +6,12 @@ public class PlayerController : MonoBehaviour {
 	public float speed;
 
 	private Rigidbody2D rb;
+    private Animator anim;
 
 	void Start ()
 	{
 		rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
 	}
 
 	void FixedUpdate ()
@@ -19,5 +21,9 @@ public class PlayerController : MonoBehaviour {
 		Vector2 movement = new Vector2 (moveHorizontal, 0.0f);
 
 		rb.AddForce (movement * speed);
+
+        // Animation
+        anim.SetFloat("SpeedX", Mathf.Abs(rb.velocity.x));
+        anim.SetFloat("SpeedY", Mathf.Abs(rb.velocity.y));
 	}
 }
