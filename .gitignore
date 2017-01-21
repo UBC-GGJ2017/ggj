@@ -32,3 +32,6 @@ ExportedObj/
 Icon?
 ehthumbs.db
 Thumbs.db
+
+# Unity2D generated meta files
+*.db.meta
