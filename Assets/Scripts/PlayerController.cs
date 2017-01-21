@@ -24,15 +24,10 @@ public class PlayerController : MonoBehaviour {
 
         Vector2 movement = new Vector2(moveHorizontal, 0.0f);
 
-        if (Input.GetKeyDown(KeyCode.W))
-            pos.y += spacing;
-        if (Input.GetKeyDown(KeyCode.S))
-            pos.y -= spacing;
-        if (Input.GetKeyDown(KeyCode.A))
-            pos.x -= spacing;
-        if (Input.GetKeyDown(KeyCode.D))
-            pos.x += spacing;
+        
+         pos.x += spacing * Input.GetAxis("Horizontal");
 
-        transform.position = Vector3.MoveTowards(transform.position, pos, speed * Time.deltaTime);
+
+        transform.position = Vector2.MoveTowards(transform.position, pos, speed * Time.deltaTime);
     }
 }
