@@ -44,12 +44,7 @@ public class GameManager : MonoBehaviour
 	void Update()
 	{
 		bool teleport = Input.GetKeyDown(KeyCode.Space);
-//		bool raycast = Input.GetKeyDown (KeyCode.Space);
-//		if (raycast) {
-//			var player = GameObject.FindWithTag ("Player");
-//
-//			Debug.DrawLine(player.transform.position, player.transform.position + Vector3.right, Color.white, 10);
-//		}
+
 		if (teleport)
 		{
 			var camera = GameObject.FindWithTag ("MainCamera");
@@ -57,21 +52,21 @@ public class GameManager : MonoBehaviour
 			Vector2 playerPos = player.transform.position;
 //			print (string.Format("{0}, {1}", camera.transform.position.x, camera.transform.position.y));
 			if (mapNumber == 1) {
-				Debug.DrawRay (player.transform.position +  Vector3.right * xdelta, Vector3.right, Color.white, 10f);
-				if (Physics2D.Raycast(playerPos +  Vector2.right * xdelta, Vector2.right, 10f))
-					print("There is something in front of the object!");
-				
-				camera.transform.Translate (Vector3.right * xdelta);
-				player.transform.Translate (Vector3.right * xdelta);
-				mapNumber = 2;
+				if (Physics2D.OverlapCircle (new Vector2 (playerPos.x + xdelta, playerPos.y), 0.001f)) {
+					print ("collided");
+				} else {
+					camera.transform.Translate (Vector3.right * xdelta);
+					player.transform.Translate (Vector3.right * xdelta);
+					mapNumber = 2;
+				}
 			} else if (mapNumber == 2) {
-				Debug.DrawRay (playerPos +  Vector2.left * xdelta, Vector2.left, Color.white, 10f);
-				if (Physics2D.Raycast(playerPos +  Vector2.left * xdelta, Vector2.left, 10f))
-					print("There is something in front of the object!");
-				
-				camera.transform.Translate (Vector3.left * xdelta);
-				player.transform.Translate (Vector3.left * xdelta);
-				mapNumber = 1;
+				if (Physics2D.OverlapCircle (new Vector2 (playerPos.x - xdelta, playerPos.y), 0.001f)) {
+					print ("collided");
+				} else {
+					camera.transform.Translate (Vector3.left * xdelta);
+					player.transform.Translate (Vector3.left * xdelta);
+					mapNumber = 1;
+				}
 			}
 		}
 	}
