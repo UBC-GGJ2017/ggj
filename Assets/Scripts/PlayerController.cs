@@ -3,31 +3,40 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
+    public float speed;
 
-    private float speed = 1;
+    private bool facing_right = true;
 
-    private int spacing = 1;
+    private Rigidbody2D rb;
+    private Animator anim;
+    private Transform trans;
 
-    private Vector2 pos;
-
-	private Rigidbody2D rb;
-
-    void Start()
+    void Start ()
     {
         rb = GetComponent<Rigidbody2D>();
-        pos = transform.position;
+        anim = GetComponent<Animator>();
     }
 
-    void FixedUpdate()
+    void FixedUpdate ()
     {
-        float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveHorizontal = Input.GetAxis ("Horizontal");
+        Vector2 movement = new Vector2 (moveHorizontal, 0.0f);
+        rb.velocity = movement * speed;
 
-        Vector2 movement = new Vector2(moveHorizontal, 0.0f);
+        // Animation
+        anim.SetFloat("SpeedX", Mathf.Abs(rb.velocity.x));
+        anim.SetFloat("SpeedY", Mathf.Abs(rb.velocity.y));
 
-        
-         pos.x += spacing * Input.GetAxis("Horizontal");
+        // Flip sprite
+        if((facing_right && moveHorizontal < 0) || (!facing_right && moveHorizontal > 0))
+        {
+            Flip();
+        }
+    }
 
-
-        transform.position = Vector2.MoveTowards(transform.position, pos, speed * Time.deltaTime);
+    void Flip()
+    {
+        facing_right = !facing_right;
+        transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
     }
 }
