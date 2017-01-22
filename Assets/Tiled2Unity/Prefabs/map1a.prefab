@@ -37,7 +37,6 @@ GameObject:
   - component: {fileID: 4865814697871702}
   - component: {fileID: 33004481005265476}
   - component: {fileID: 23309545062153934}
-  - component: {fileID: 114103684112050872}
   - component: {fileID: 114526519568779584}
   m_Layer: 0
   m_Name: tilesheet_complete
@@ -139,13 +138,13 @@ MeshRenderer:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1436304687528226}
   m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 0
+  m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 271412c81617cce419058641bede1a6b, type: 2}
+  - {fileID: 2100000, guid: 19852d10095cf124d9fcac884d8453cb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -169,7 +168,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1436304687528226}
-  m_Mesh: {fileID: 4300000, guid: a8dd21ad82f374467a8b23981d2ba6b8, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 660c4c2ba17de864f948e4f2a6bd38d8, type: 3}
 --- !u!60 &60169155488986190
 PolygonCollider2D:
   m_ObjectHideFlags: 1
@@ -324,17 +323,6 @@ PolygonCollider2D:
       - {x: 3713, y: -3072}
       - {x: 3713, y: -3136}
       - {x: 3775, y: -3136}
---- !u!114 &114103684112050872
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1436304687528226}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1874989c5e2da094ea00112c6a895694, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114199832492674672
 MonoBehaviour:
   m_ObjectHideFlags: 1
