@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public Object nextStage;
 
     public GameObject[] maps;
+    public bool[] gravity_reversed;
     public AudioClip[] songs;
 
     public AudioSource sfx_source;
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour
     private AudioSource audio;
     private Vector2 player_start_location;
     private bool game_clear;
+    private bool player_gravity_reversed = false;
 
 	public static GameManager instance = null;              //Static instance of GameManager which allows it to be accessed by any other script.
 //	toggle to be removed once it is accurate
@@ -61,6 +63,7 @@ public class GameManager : MonoBehaviour
         player.transform.Translate(Vector3.right * GetMapOffsetToFirst(current_map).x);
         cam.transform.Translate(Vector3.right * GetMapOffsetToFirst(current_map).x);
         player_start_location = player.transform.position;
+        SetMapGravity(first_map);
     }
 
     int GetNextMap()
@@ -112,7 +115,12 @@ public class GameManager : MonoBehaviour
 			}
 	}
 
-    IEnumerator SwitchMap(int map)
+    public void CallSwitchMap(int map)
+    {
+        StartCoroutine(SwitchMap(map));
+    }
+
+    public IEnumerator SwitchMap(int map)
     {
         Vector2 offset = GetMapOffset(map);
         player.GetComponent<PlayerController>().SetWarping(true);
@@ -126,10 +134,22 @@ public class GameManager : MonoBehaviour
         GetComponent<CustomImageEffect>().FadeIn();
         yield return new WaitForSeconds(0.5f);
         player.GetComponent<PlayerController>().SetWarping(false);
+        SetMapGravity(map);
+    }
+
+    void SetMapGravity(int map)
+    {
+        if (gravity_reversed[map] && player.GetComponent<Rigidbody2D>().gravityScale > 0 || !gravity_reversed[map] && player.GetComponent<Rigidbody2D>().gravityScale < 0)
+        {
+            player_gravity_reversed = !player_gravity_reversed;
+            player.GetComponent<Rigidbody2D>().gravityScale *= -1;
+            player.GetComponent<PlayerController>().FlipY();
+        }
     }
 
     IEnumerator Restart()
     {
+        player.GetComponent<PlayerInventory>().Clear();
         Vector2 offset = GetMapOffset(first_map);
         player.GetComponent<PlayerController>().SetWarping(true);
         GetComponent<CustomImageEffect>().FadeOut();
@@ -176,11 +196,6 @@ public class GameManager : MonoBehaviour
         audio.clip = songs[map];
         audio.time = song_times[map];
         audio.Play();
-    }
-
-    void ResetStage()
-    {
-
     }
 
     public void AdvanceStage()

@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour {
     float cam_height;
     float cam_width;
     private bool facing_right = true;
+    private bool facing_up = true;
     private bool warping = false;
     private bool controls_locked = false;
 
@@ -37,11 +38,11 @@ public class PlayerController : MonoBehaviour {
             float moveHorizontal = Input.GetAxis("Horizontal");
             if (rb.position.x <= cam.transform.position.x - cam_width / 2 && moveHorizontal < 0)
             {
-                moveHorizontal = 0f;
+                moveHorizontal = 0.1f;
             }
             else if (rb.position.x >= transform.position.x + cam_width / 2 && moveHorizontal > 0)
             {
-                moveHorizontal = 0f;
+                moveHorizontal = -0.1f;
             }
             Vector2 movement = new Vector2(moveHorizontal, 0.0f);
             rb.velocity = movement * speed;
@@ -49,7 +50,7 @@ public class PlayerController : MonoBehaviour {
                 // Flip sprite
                 if ((facing_right && moveHorizontal < 0) || (!facing_right && moveHorizontal > 0))
             {
-                Flip();
+                FlipX();
             }
         } else
         {
@@ -61,10 +62,16 @@ public class PlayerController : MonoBehaviour {
         anim.SetFloat("SpeedY", Mathf.Abs(rb.velocity.y));
     }
 
-    void Flip()
+    public void FlipX()
     {
         facing_right = !facing_right;
         transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+    }
+
+    public void FlipY()
+    {
+        facing_up = !facing_up;
+        transform.localScale = new Vector2(transform.localScale.x, -transform.localScale.y);
     }
 
     // Not needed yet

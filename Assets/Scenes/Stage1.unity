@@ -1599,10 +1599,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1577072116}
   cam: {fileID: 849615898}
-  nextStage: {fileID: 102900000, guid: f8ade49d599c4924a8a6b4117ea70e38, type: 3}
+  nextStage: {fileID: 102900000, guid: 6f5dbd2f33e8d4b46889a8653750a57f, type: 3}
   maps:
   - {fileID: 792038735}
   - {fileID: 1625577727}
+  gravity_reversed: 0001
   songs:
   - {fileID: 8300000, guid: 940b001f15a364a47a57a1bba30d43ae, type: 3}
   - {fileID: 8300000, guid: d91aacf1646bae84b92b941b0358585e, type: 3}
@@ -1612,7 +1613,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 318e0c87f5e8dce418e9cad5644eb76e, type: 3}
   - {fileID: 8300000, guid: 36c2c516f3987f84cafc86e16fe60d79, type: 3}
   - {fileID: 8300000, guid: c95830445b5c30045be75a14b82dafcd, type: 3}
-  first_map: 0
+  first_map: 1
 --- !u!81 &849615901
 AudioListener:
   m_ObjectHideFlags: 0
@@ -3438,7 +3439,7 @@ Prefab:
     - target: {fileID: 50924905158504636, guid: 2cfa8812edc3cf44da2a9fcbfd807362,
         type: 2}
       propertyPath: m_GravityScale
-      value: 15
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4700871088723774, guid: 2cfa8812edc3cf44da2a9fcbfd807362, type: 2}
       propertyPath: m_LocalScale.x

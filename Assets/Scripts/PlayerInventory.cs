@@ -37,4 +37,9 @@ public class PlayerInventory : MonoBehaviour {
         collection[ITEM_TYPES.KEY_BASIC] = number_collected - 1;
         Debug.Log("Currently have " + collection[ITEM_TYPES.KEY_BASIC] + " items");
     }
+
+    public void Clear()
+    {
+        collection = new Dictionary<ITEM_TYPES, int>();
+    }
 }
