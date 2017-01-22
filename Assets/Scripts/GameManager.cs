@@ -5,8 +5,13 @@ using System.Collections.Generic;       //Allows us to use Lists.
 
 public class GameManager : MonoBehaviour
 {
+    public GameObject player;
+    public GameObject cam;
+
     public GameObject[] maps;
     public int current_map = 0;
+
+    private Vector2 next_offset;
 
 	public static GameManager instance = null;              //Static instance of GameManager which allows it to be accessed by any other script.
 //	toggle to be removed once it is accurate
@@ -36,40 +41,57 @@ public class GameManager : MonoBehaviour
 	//Initializes the game for each level.
 	void InitGame()
 	{
-		
-
-	}
+        player.transform.Translate(Vector3.right * GetMapOffsetToFirst(current_map).x);
+        cam.transform.Translate(Vector3.right * GetMapOffsetToFirst(current_map).x);
+    }
 
     int GetNextMap()
     {
         return (current_map + 1) % maps.Length;
     }
 
-    float GetNextMapOffset()
+    void CalculateNextMapOffset()
     {
-        return maps[GetNextMap()].transform.position.x - maps[current_map].transform.position.x;
+        next_offset = new Vector2(maps[GetNextMap()].transform.position.x - maps[current_map].transform.position.x,
+                           maps[GetNextMap()].transform.position.y - maps[current_map].transform.position.y);
+    }
+
+    Vector2 GetMapOffsetToFirst(int map)
+    {
+        return new Vector2(maps[map].transform.position.x - maps[0].transform.position.x,
+                           maps[map].transform.position.y - maps[0].transform.position.y);
     }
 
 
-	//Update is called every frame.
-	void Update()
+    //Update is called every frame.
+    void Update()
 	{
+        Debug.Log(cam.transform.position.x);
 		bool teleport = Input.GetKeyDown(KeyCode.Space);
 
 		if (teleport)
 		{
-            float xdelta = GetNextMapOffset();
-            var camera = GameObject.FindWithTag ("MainCamera");
-			var player = GameObject.FindWithTag ("Player");
+            CalculateNextMapOffset();
 			Vector2 playerPos = player.transform.position;
-//			print (string.Format("{0}, {1}", camera.transform.position.x, camera.transform.position.y));
-				if (Physics2D.OverlapCircle (new Vector2 (playerPos.x + xdelta, playerPos.y), 0.001f)) {
+				if (Physics2D.OverlapCircle (new Vector2 (playerPos.x + next_offset.x, playerPos.y + next_offset.y), 0.001f)) {
 					print ("collided");
-				} else {
-                    camera.transform.Translate (Vector3.right * xdelta);
-					player.transform.Translate (Vector3.right * xdelta);
-                    current_map = GetNextMap();
-				}
+				} else if (!player.GetComponent<PlayerController>().IsWarping()){
+                    StartCoroutine(SwitchMap());
+            }
 			}
 	}
+
+    IEnumerator SwitchMap()
+    {
+        player.GetComponent<PlayerController>().SetWarping(true);
+        GetComponent<CustomImageEffect>().FadeOut();
+        yield return new WaitForSeconds(0.2f);
+        GetComponent<CustomImageEffect>().FadeIn();
+        yield return new WaitForSeconds(0.2f);
+        GetComponent<CustomImageEffect>().SetValue(0f);
+        player.GetComponent<PlayerController>().SetWarping(false);
+        cam.transform.Translate(Vector3.right * next_offset.x);
+        player.transform.Translate(Vector3.right * next_offset.x);
+        current_map = GetNextMap();
+    }
 }

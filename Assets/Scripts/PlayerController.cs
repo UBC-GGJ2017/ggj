@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour {
     public float speed;
 
     private bool facing_right = true;
+    private bool warping = false;
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -17,20 +18,31 @@ public class PlayerController : MonoBehaviour {
         anim = GetComponent<Animator>();
     }
 
+    public void SetWarping(bool state)
+    {
+        warping = state;
+        anim.SetBool("Warping", state);
+    }
+
     void FixedUpdate ()
     {
-        float moveHorizontal = Input.GetAxis ("Horizontal");
-        Vector2 movement = new Vector2 (moveHorizontal, 0.0f);
-        rb.velocity = movement * speed;
+        if (!warping) { 
+            float moveHorizontal = Input.GetAxis("Horizontal");
+            Vector2 movement = new Vector2(moveHorizontal, 0.0f);
+            rb.velocity = movement * speed;
 
-        // Animation
-        anim.SetFloat("SpeedX", Mathf.Abs(rb.velocity.x));
-        anim.SetFloat("SpeedY", Mathf.Abs(rb.velocity.y));
+            // Animation
+            anim.SetFloat("SpeedX", Mathf.Abs(rb.velocity.x));
+            anim.SetFloat("SpeedY", Mathf.Abs(rb.velocity.y));
 
-        // Flip sprite
-        if((facing_right && moveHorizontal < 0) || (!facing_right && moveHorizontal > 0))
+            // Flip sprite
+            if ((facing_right && moveHorizontal < 0) || (!facing_right && moveHorizontal > 0))
+            {
+                Flip();
+            }
+        } else
         {
-            Flip();
+            rb.velocity = new Vector2(0f, 0f);
         }
     }
 
@@ -38,5 +50,10 @@ public class PlayerController : MonoBehaviour {
     {
         facing_right = !facing_right;
         transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+    }
+
+    public bool IsWarping()
+    {
+        return warping;
     }
 }
