@@ -12,9 +12,19 @@ public class GameManager : MonoBehaviour
     public Object nextStage;
 
     public GameObject[] maps;
-    public int current_map = 0;
+    public AudioClip[] songs;
 
-    private Vector2 next_offset;
+    public AudioSource sfx_source;
+    public AudioClip[] sfx;
+
+    public int first_map = 0;
+    private int current_map = 0;
+
+    private float[] song_times;
+
+    private AudioSource audio;
+    private Vector2 player_start_location;
+    private bool game_clear;
 
 	public static GameManager instance = null;              //Static instance of GameManager which allows it to be accessed by any other script.
 //	toggle to be removed once it is accurate
@@ -44,8 +54,13 @@ public class GameManager : MonoBehaviour
 	//Initializes the game for each level.
 	void InitGame()
 	{
+        current_map = first_map;
+        audio = GetComponent<AudioSource>();
+        song_times = new float[songs.Length];
+        SwitchSong(current_map);
         player.transform.Translate(Vector3.right * GetMapOffsetToFirst(current_map).x);
         cam.transform.Translate(Vector3.right * GetMapOffsetToFirst(current_map).x);
+        player_start_location = player.transform.position;
     }
 
     int GetNextMap()
@@ -53,10 +68,15 @@ public class GameManager : MonoBehaviour
         return (current_map + 1) % maps.Length;
     }
 
-    void CalculateNextMapOffset()
+    AudioClip GetNextSong()
     {
-        next_offset = new Vector2(maps[GetNextMap()].transform.position.x - maps[current_map].transform.position.x,
-                           maps[GetNextMap()].transform.position.y - maps[current_map].transform.position.y);
+        return songs[GetNextMap()];
+    }
+
+    Vector2 GetMapOffset(int map)
+    {
+        return new Vector2(maps[map].transform.position.x - maps[current_map].transform.position.x,
+                           maps[map].transform.position.y - maps[current_map].transform.position.y);
     }
 
        Vector2 GetMapOffsetToFirst(int map)
@@ -69,36 +89,112 @@ public class GameManager : MonoBehaviour
     //Update is called every frame.
     void Update()
 	{
-        Debug.Log(cam.transform.position.x);
+        if (game_clear) return;
+
 		bool teleport = Input.GetKeyDown(KeyCode.Space);
+        bool restart = Input.GetKeyDown(KeyCode.R);
+
+        if (restart && !player.GetComponent<PlayerController>().IsWarping())
+        {
+            StartCoroutine(Restart());
+            return;
+        }
 
 		if (teleport)
 		{
-            CalculateNextMapOffset();
+            Vector2 next_offset = GetMapOffset(GetNextMap());
 			Vector2 playerPos = player.transform.position;
 				if (Physics2D.OverlapCircle (new Vector2 (playerPos.x + next_offset.x, playerPos.y + next_offset.y), 0.001f)) {
 					print ("collided");
 				} else if (!player.GetComponent<PlayerController>().IsWarping()){
-                  StartCoroutine(SwitchMap());
+                  StartCoroutine(SwitchMap(GetNextMap()));
             }
 			}
 	}
 
-    IEnumerator SwitchMap()
+    IEnumerator SwitchMap(int map)
     {
+        Vector2 offset = GetMapOffset(map);
         player.GetComponent<PlayerController>().SetWarping(true);
         GetComponent<CustomImageEffect>().FadeOut();
         yield return new WaitForSeconds(0.3f);
-        cam.transform.Translate(Vector3.right * next_offset.x);
-        player.transform.Translate(Vector3.right * next_offset.x);
-        current_map = GetNextMap();
+        cam.transform.Translate(Vector3.right * offset.x);
+        player.transform.Translate(Vector3.right * offset.x);
+        PlayWarpSound();
+        SwitchSong(map);
+        current_map = map;
         GetComponent<CustomImageEffect>().FadeIn();
         yield return new WaitForSeconds(0.5f);
         player.GetComponent<PlayerController>().SetWarping(false);
     }
 
+    IEnumerator Restart()
+    {
+        Vector2 offset = GetMapOffset(first_map);
+        player.GetComponent<PlayerController>().SetWarping(true);
+        GetComponent<CustomImageEffect>().FadeOut();
+        yield return new WaitForSeconds(0.3f);
+        cam.transform.Translate(Vector3.right * offset.x);
+        player.transform.position = player_start_location;
+        PlayWarpSound();
+        SwitchSong(first_map);
+        current_map = first_map;
+        GetComponent<CustomImageEffect>().FadeIn();
+        yield return new WaitForSeconds(0.5f);
+        player.GetComponent<PlayerController>().SetWarping(false);
+    }
+    
+    public void PlayWarpSound()
+    {
+        // toggle between two sound effects
+        if (sfx_source.clip == sfx[0])
+        {
+            sfx_source.clip = sfx[1];
+        }
+        else
+        {
+            sfx_source.clip = sfx[0];
+        }
+        sfx_source.Play();
+    }
+
+    public void PlayVictorySound()
+    {
+        sfx_source.clip = sfx[2];
+        sfx_source.Play();
+    }
+
+    public void PlayItemGetSound()
+    {
+        sfx_source.clip = sfx[3];
+        sfx_source.Play();
+    }
+
+    void SwitchSong(int map)
+    {
+        song_times[current_map] = audio.time;
+        audio.clip = songs[map];
+        audio.time = song_times[map];
+        audio.Play();
+    }
+
+    void ResetStage()
+    {
+
+    }
+
     public void AdvanceStage()
     {
         SceneManager.LoadScene(nextStage.name);
+    }
+
+    public void SetGameClear(bool state)
+    {
+        game_clear = state;
+    }
+
+    public bool GameIsClear()
+    {
+        return game_clear;
     }
 }
