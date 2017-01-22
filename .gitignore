@@ -34,4 +34,4 @@ ehthumbs.db
 Thumbs.db
 
 # Unity2D generated meta files
-*.meta
+*db.meta
