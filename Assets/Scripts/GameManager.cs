@@ -5,11 +5,11 @@ using System.Collections.Generic;       //Allows us to use Lists.
 
 public class GameManager : MonoBehaviour
 {
+    public GameObject[] maps;
+    public int current_map = 0;
 
 	public static GameManager instance = null;              //Static instance of GameManager which allows it to be accessed by any other script.
 //	toggle to be removed once it is accurate
-	public int xdelta; 
-	private int mapNumber = 1;
 
 	//Awake is always called before any Start functions
 	void Awake()
@@ -40,6 +40,17 @@ public class GameManager : MonoBehaviour
 
 	}
 
+    int GetNextMap()
+    {
+        return (current_map + 1) % maps.Length;
+    }
+
+    float GetNextMapOffset()
+    {
+        return maps[GetNextMap()].transform.position.x - maps[current_map].transform.position.x;
+    }
+
+
 	//Update is called every frame.
 	void Update()
 	{
@@ -47,27 +58,18 @@ public class GameManager : MonoBehaviour
 
 		if (teleport)
 		{
-			var camera = GameObject.FindWithTag ("MainCamera");
+            float xdelta = GetNextMapOffset();
+            var camera = GameObject.FindWithTag ("MainCamera");
 			var player = GameObject.FindWithTag ("Player");
 			Vector2 playerPos = player.transform.position;
 //			print (string.Format("{0}, {1}", camera.transform.position.x, camera.transform.position.y));
-			if (mapNumber == 1) {
 				if (Physics2D.OverlapCircle (new Vector2 (playerPos.x + xdelta, playerPos.y), 0.001f)) {
 					print ("collided");
 				} else {
-					camera.transform.Translate (Vector3.right * xdelta);
+                    camera.transform.Translate (Vector3.right * xdelta);
 					player.transform.Translate (Vector3.right * xdelta);
-					mapNumber = 2;
-				}
-			} else if (mapNumber == 2) {
-				if (Physics2D.OverlapCircle (new Vector2 (playerPos.x - xdelta, playerPos.y), 0.001f)) {
-					print ("collided");
-				} else {
-					camera.transform.Translate (Vector3.left * xdelta);
-					player.transform.Translate (Vector3.left * xdelta);
-					mapNumber = 1;
+                    current_map = GetNextMap();
 				}
 			}
-		}
 	}
 }
