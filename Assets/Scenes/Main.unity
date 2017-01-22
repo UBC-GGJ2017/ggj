@@ -312,6 +312,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5470471e8f03e4ecd8ea3af945b31b8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  cam: {fileID: 0}
   maps:
   - {fileID: 196425087}
   - {fileID: 1666489096}
