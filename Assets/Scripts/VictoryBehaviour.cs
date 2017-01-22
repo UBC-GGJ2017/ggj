@@ -44,6 +44,8 @@ public class VictoryBehaviour : MonoBehaviour {
 
     IEnumerator UnlockDoorSequence()
     {
+        manager.GetComponent<GameManager>().PlayVictorySound();
+        manager.GetComponent<GameManager>().SetGameClear(true);
         anim.SetBool("Unlocking", true);
         player.GetComponent<PlayerController>().SetControlsLocked(true);
         yield return new WaitForSeconds(2);

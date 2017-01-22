@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CollectibleBehaviour : MonoBehaviour {
 
+    public GameObject manager;
     public GameObject player;
 
 	// Use this for initialization
@@ -13,6 +14,7 @@ public class CollectibleBehaviour : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        manager.GetComponent<GameManager>().PlayItemGetSound();
         Destroy(gameObject);
         player.GetComponent<PlayerInventory>().Collect(PlayerInventory.ITEM_TYPES.KEY_BASIC);
     }

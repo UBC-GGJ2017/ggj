@@ -33,7 +33,6 @@ public class PlayerController : MonoBehaviour {
 
     void FixedUpdate ()
     {
-        Debug.Log(rb.position.x+0.5 + ", " + (cam.transform.position.x - cam_width / 2));
         if (!warping && !controls_locked) { 
             float moveHorizontal = Input.GetAxis("Horizontal");
             if (rb.position.x <= cam.transform.position.x - cam_width / 2 && moveHorizontal < 0)
