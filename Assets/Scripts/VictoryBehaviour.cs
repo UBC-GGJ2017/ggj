@@ -32,10 +32,11 @@ public class VictoryBehaviour : MonoBehaviour {
             manager.GetComponent<GameManager>().AdvanceStage();
         } else
         {
-            if (player.GetComponent<PlayerInventory>().HasKey())
+            if (player.GetComponent<PlayerInventory>().HasKey()  && (!anim.GetBool("Unlocking")))
             {
                 // play animation and wait a few seconds
                 StartCoroutine(UnlockDoorSequence());
+                player.GetComponent<PlayerInventory>().ConsumeKey();
             }
         }
     }
@@ -44,7 +45,9 @@ public class VictoryBehaviour : MonoBehaviour {
     IEnumerator UnlockDoorSequence()
     {
         anim.SetBool("Unlocking", true);
+        player.GetComponent<PlayerController>().SetControlsLocked(true);
         yield return new WaitForSeconds(2);
         locked = false;
+        manager.GetComponent<GameManager>().AdvanceStage();
     }
 }

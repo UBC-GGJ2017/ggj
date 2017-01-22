@@ -28,4 +28,13 @@ public class PlayerInventory : MonoBehaviour {
     {
         return (collection[ITEM_TYPES.KEY_BASIC] > 0);
     }
+
+    public void ConsumeKey()
+    {
+        int number_collected;
+        collection.TryGetValue(ITEM_TYPES.KEY_BASIC, out number_collected);
+        if(number_collected > 0)
+        collection[ITEM_TYPES.KEY_BASIC] = number_collected - 1;
+        Debug.Log("Currently have " + collection[ITEM_TYPES.KEY_BASIC] + " items");
+    }
 }

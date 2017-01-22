@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
                            maps[GetNextMap()].transform.position.y - maps[current_map].transform.position.y);
     }
 
-    Vector2 GetMapOffsetToFirst(int map)
+       Vector2 GetMapOffsetToFirst(int map)
     {
         return new Vector2(maps[map].transform.position.x - maps[0].transform.position.x,
                            maps[map].transform.position.y - maps[0].transform.position.y);
@@ -88,14 +88,13 @@ public class GameManager : MonoBehaviour
     {
         player.GetComponent<PlayerController>().SetWarping(true);
         GetComponent<CustomImageEffect>().FadeOut();
-        yield return new WaitForSeconds(0.2f);
-        GetComponent<CustomImageEffect>().FadeIn();
-        yield return new WaitForSeconds(0.2f);
-        GetComponent<CustomImageEffect>().SetValue(0f);
-        player.GetComponent<PlayerController>().SetWarping(false);
+        yield return new WaitForSeconds(0.3f);
         cam.transform.Translate(Vector3.right * next_offset.x);
         player.transform.Translate(Vector3.right * next_offset.x);
         current_map = GetNextMap();
+        GetComponent<CustomImageEffect>().FadeIn();
+        yield return new WaitForSeconds(0.5f);
+        player.GetComponent<PlayerController>().SetWarping(false);
     }
 
     public void AdvanceStage()

@@ -20,39 +20,39 @@ public class CustomImageEffect : MonoBehaviour
             Graphics.Blit(src, dst, EffectMaterial);
     }
 
-    void Update()
-    {
-        if (animating)
-        {
-            float new_value = Mathf.Lerp(start_val, end_val, Time.deltaTime * speed);
-            EffectMaterial.SetFloat("_Magnitude", new_value);
-            Debug.Log("Fading out with " + new_value + ", rv: " + (new_value >= 1f));
-            if (new_value == end_val)
-            {
-                animating = false;
-            }
-        }
-    }
-
-    public void SetValue(float val)
-    {
-        animating = false;
-        EffectMaterial.SetFloat("_Magnitude", val); 
-    }
-
     public void FadeOut()
     {
-        startTime = Time.time;
-        animating = true;
-        start_val = 0f;
-        end_val = 0.2f;
+        StartCoroutine(FadeOut2());
+
     }
 
     public void FadeIn()
     {
-        startTime = Time.time;
-        animating = true;
-        start_val = 0.2f;
-        end_val = 0f;
+        StartCoroutine(FadeIn2());
+    }
+
+    public float transitionDuration = 0.3f;
+    // assume magnitude is at 0
+    IEnumerator FadeOut2()
+    {
+        float t = 0.0f;
+        while (t < transitionDuration)
+        {
+            t+= Time.deltaTime * (Time.timeScale / transitionDuration);
+            EffectMaterial.SetFloat("_Magnitude", Mathf.Lerp(0f, 0.3f, t));
+            yield return 0;
+        }
+    }
+
+    // assume magnitude is at 1
+    IEnumerator FadeIn2()
+    {
+        float t = 0.0f;
+        while (t < transitionDuration)
+        {
+            t += Time.deltaTime * (Time.timeScale / transitionDuration);
+            EffectMaterial.SetFloat("_Magnitude", Mathf.Lerp(0.3f, 0f, t));
+            yield return 0;
+        }
     }
 }
