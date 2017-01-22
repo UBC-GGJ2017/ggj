@@ -26,7 +26,9 @@ public class PlayerInventory : MonoBehaviour {
 
     public bool HasKey()
     {
-        return (collection[ITEM_TYPES.KEY_BASIC] > 0);
+        int val;
+        collection.TryGetValue(ITEM_TYPES.KEY_BASIC, out val);
+        return (val > 0);
     }
 
     public void ConsumeKey()

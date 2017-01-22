@@ -147,7 +147,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    IEnumerator Restart()
+    public IEnumerator Restart()
     {
         player.GetComponent<PlayerInventory>().Clear();
         Vector2 offset = GetMapOffset(first_map);
@@ -162,6 +162,7 @@ public class GameManager : MonoBehaviour
         GetComponent<CustomImageEffect>().FadeIn();
         yield return new WaitForSeconds(0.5f);
         player.GetComponent<PlayerController>().SetWarping(false);
+        SetMapGravity(first_map);
     }
     
     public void PlayWarpSound()
