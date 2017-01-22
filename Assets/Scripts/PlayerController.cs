@@ -4,6 +4,7 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 
     public float speed;
+    public float jump_speed;
 
     private bool facing_right = true;
     private bool warping = false;
@@ -50,6 +51,14 @@ public class PlayerController : MonoBehaviour {
     {
         facing_right = !facing_right;
         transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+    }
+
+    void Jump()
+    {
+        if (Mathf.Abs(rb.velocity.y) < 0.01f)
+        {
+            rb.AddForce(Vector2.up * jump_speed);
+        }
     }
 
     public bool IsWarping()

@@ -23,4 +23,9 @@ public class PlayerInventory : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public bool HasKey()
+    {
+        return (collection[ITEM_TYPES.KEY_BASIC] > 0);
+    }
 }

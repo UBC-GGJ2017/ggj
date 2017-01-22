@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEngine.SceneManagement;
+using UnityEngine;
 using System.Collections;
 
 using System.Collections.Generic;       //Allows us to use Lists. 
@@ -7,6 +8,8 @@ public class GameManager : MonoBehaviour
 {
     public GameObject player;
     public GameObject cam;
+
+    public Object nextStage;
 
     public GameObject[] maps;
     public int current_map = 0;
@@ -76,7 +79,7 @@ public class GameManager : MonoBehaviour
 				if (Physics2D.OverlapCircle (new Vector2 (playerPos.x + next_offset.x, playerPos.y + next_offset.y), 0.001f)) {
 					print ("collided");
 				} else if (!player.GetComponent<PlayerController>().IsWarping()){
-                    StartCoroutine(SwitchMap());
+                  StartCoroutine(SwitchMap());
             }
 			}
 	}
@@ -93,5 +96,10 @@ public class GameManager : MonoBehaviour
         cam.transform.Translate(Vector3.right * next_offset.x);
         player.transform.Translate(Vector3.right * next_offset.x);
         current_map = GetNextMap();
+    }
+
+    public void AdvanceStage()
+    {
+        SceneManager.LoadScene(nextStage.name);
     }
 }
