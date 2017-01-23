@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     private Vector2 player_start_location;
     private bool game_clear;
     private bool player_gravity_reversed = false;
+    private float player_start_gravity;
 
 	public static GameManager instance = null;              //Static instance of GameManager which allows it to be accessed by any other script.
 //	toggle to be removed once it is accurate
@@ -63,6 +64,7 @@ public class GameManager : MonoBehaviour
         player.transform.Translate(Vector3.right * GetMapOffsetToFirst(current_map).x);
         cam.transform.Translate(Vector3.right * GetMapOffsetToFirst(current_map).x);
         player_start_location = player.transform.position;
+        player_start_gravity = player.GetComponent<Rigidbody2D>().gravityScale;
         SetMapGravity(first_map);
     }
 
@@ -108,7 +110,8 @@ public class GameManager : MonoBehaviour
             Vector2 next_offset = GetMapOffset(GetNextMap());
 			Vector2 playerPos = player.transform.position;
 				if (Physics2D.OverlapCircle (new Vector2 (playerPos.x + next_offset.x, playerPos.y + next_offset.y), 0.001f)) {
-					print ("collided");
+                    sfx_source.clip = sfx[4];
+                    sfx_source.Play();
 				} else if (!player.GetComponent<PlayerController>().IsWarping()){
                   StartCoroutine(SwitchMap(GetNextMap()));
             }
@@ -122,6 +125,7 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator SwitchMap(int map)
     {
+        ZeroGravity();
         Vector2 offset = GetMapOffset(map);
         player.GetComponent<PlayerController>().SetWarping(true);
         GetComponent<CustomImageEffect>().FadeOut();
@@ -137,6 +141,11 @@ public class GameManager : MonoBehaviour
         SetMapGravity(map);
     }
 
+    void ZeroGravity()
+    {
+        player.GetComponent<Rigidbody2D>().gravityScale = 0f;
+    }
+
     void SetMapGravity(int map)
     {
         if (gravity_reversed[map] && player.GetComponent<Rigidbody2D>().gravityScale > 0 || !gravity_reversed[map] && player.GetComponent<Rigidbody2D>().gravityScale < 0)
@@ -145,6 +154,15 @@ public class GameManager : MonoBehaviour
             player.GetComponent<Rigidbody2D>().gravityScale *= -1;
             player.GetComponent<PlayerController>().FlipY();
         }
+        if (player.GetComponent<Rigidbody2D>().gravityScale == 0)
+        {
+            player.GetComponent<Rigidbody2D>().gravityScale = (gravity_reversed[map]) ? -player_start_gravity : player_start_gravity;
+        }
+        if (player.GetComponent<Rigidbody2D>().gravityScale < 0 && player.GetComponent<PlayerController>().IsFacingUp() || player.GetComponent<Rigidbody2D>().gravityScale > 0 && !player.GetComponent<PlayerController>().IsFacingUp())
+        {
+            player.GetComponent<PlayerController>().FlipY();
+        } 
+        player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     }
 
     public void CallRestart()
@@ -152,29 +170,35 @@ public class GameManager : MonoBehaviour
         StartCoroutine(Restart());
     }
 
-    IEnumerator Restart()
+
+    void ResetItems()
     {
         player.GetComponent<PlayerInventory>().Clear();
         ArrayList items = GetComponent<ItemManager>().GetDisabledItems();
-        for (int i = 0; i<items.Count; i++)
+        for (int i = 0; i < items.Count; i++)
         {
             GameObject obj = (GameObject)items[i];
             obj.SetActive(true);
         }
         GetComponent<ItemManager>().Clear();
+    }    
+
+    IEnumerator Restart()
+    {
+        SetMapGravity(first_map);
+        ResetItems();
         Vector2 offset = GetMapOffset(first_map);
         player.GetComponent<PlayerController>().SetWarping(true);
         GetComponent<CustomImageEffect>().FadeOut();
         yield return new WaitForSeconds(0.3f);
         cam.transform.Translate(Vector3.right * offset.x);
         player.transform.position = player_start_location;
-        PlayWarpSound();
+        PlayDeathSound();
         SwitchSong(first_map);
         current_map = first_map;
         GetComponent<CustomImageEffect>().FadeIn();
         yield return new WaitForSeconds(0.5f);
         player.GetComponent<PlayerController>().SetWarping(false);
-        SetMapGravity(first_map);
     }
     
     public void PlayWarpSound()
@@ -194,6 +218,12 @@ public class GameManager : MonoBehaviour
     public void PlayVictorySound()
     {
         sfx_source.clip = sfx[2];
+        sfx_source.Play();
+    }
+
+    public void PlayDeathSound()
+    {
+        sfx_source.clip = sfx[5];
         sfx_source.Play();
     }
 
@@ -224,5 +254,10 @@ public class GameManager : MonoBehaviour
     public bool GameIsClear()
     {
         return game_clear;
+    }
+
+    public Vector2 GetPlayerStartPos()
+    {
+        return player_start_location;
     }
 }

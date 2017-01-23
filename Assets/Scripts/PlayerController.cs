@@ -97,4 +97,9 @@ public class PlayerController : MonoBehaviour {
     {
         return warping;
     }
+
+    public bool IsFacingUp()
+    {
+        return facing_up;
+    }
 }

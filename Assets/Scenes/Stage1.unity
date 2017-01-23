@@ -1498,6 +1498,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 318e0c87f5e8dce418e9cad5644eb76e, type: 3}
   - {fileID: 8300000, guid: 36c2c516f3987f84cafc86e16fe60d79, type: 3}
   - {fileID: 8300000, guid: c95830445b5c30045be75a14b82dafcd, type: 3}
+  - {fileID: 8300000, guid: e98bc75e1897d5841ba85acbfaf37579, type: 3}
+  - {fileID: 8300000, guid: 7fa1d6a30d5c589498bd5c4288852d18, type: 3}
   first_map: 1
 --- !u!81 &849615901
 AudioListener:
