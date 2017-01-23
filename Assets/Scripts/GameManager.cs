@@ -147,9 +147,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public IEnumerator Restart()
+    public void CallRestart()
+    {
+        StartCoroutine(Restart());
+    }
+
+    IEnumerator Restart()
     {
         player.GetComponent<PlayerInventory>().Clear();
+        ArrayList items = GetComponent<ItemManager>().GetDisabledItems();
+        for (int i = 0; i<items.Count; i++)
+        {
+            GameObject obj = (GameObject)items[i];
+            obj.SetActive(true);
+        }
+        GetComponent<ItemManager>().Clear();
         Vector2 offset = GetMapOffset(first_map);
         player.GetComponent<PlayerController>().SetWarping(true);
         GetComponent<CustomImageEffect>().FadeOut();

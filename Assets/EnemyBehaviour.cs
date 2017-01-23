@@ -14,6 +14,6 @@ public class EnemyBehaviour : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        StartCoroutine(manager.GetComponent<GameManager>().Restart());
+        manager.GetComponent<GameManager>().CallRestart();
     }
 }

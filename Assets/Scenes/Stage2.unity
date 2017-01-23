@@ -461,7 +461,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 226022188}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 67.62929, y: 5.4, z: -10.09375}
+  m_LocalPosition: {x: 67.62929, y: 6, z: -10.09375}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1247,7 +1247,7 @@ MonoBehaviour:
   songs:
   - {fileID: 8300000, guid: 940b001f15a364a47a57a1bba30d43ae, type: 3}
   - {fileID: 8300000, guid: d91aacf1646bae84b92b941b0358585e, type: 3}
-  - {fileID: 8300000, guid: d91aacf1646bae84b92b941b0358585e, type: 3}
+  - {fileID: 8300000, guid: 32cd343533e422e47b146e70f418f1df, type: 3}
   sfx_source: {fileID: 325267201}
   sfx:
   - {fileID: 8300000, guid: c578a1d8c36c77944a38fc2a3335b0fa, type: 3}
@@ -1720,6 +1720,16 @@ Prefab:
       propertyPath: m_LocalScale.z
       value: 1.6854229
       objectReference: {fileID: 0}
+    - target: {fileID: 114555462399548720, guid: b97feb1bace37834d813ce04f6afc6bf,
+        type: 2}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1577072116}
+    - target: {fileID: 114555462399548720, guid: b97feb1bace37834d813ce04f6afc6bf,
+        type: 2}
+      propertyPath: manager
+      value: 
+      objectReference: {fileID: 849615898}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b97feb1bace37834d813ce04f6afc6bf, type: 2}
   m_IsPrefabParent: 0

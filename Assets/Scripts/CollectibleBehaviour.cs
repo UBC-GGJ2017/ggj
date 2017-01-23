@@ -15,7 +15,8 @@ public class CollectibleBehaviour : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D other)
     {
         manager.GetComponent<GameManager>().PlayItemGetSound();
-        Destroy(gameObject);
+        manager.GetComponent<ItemManager>().Enqueue(gameObject);
         player.GetComponent<PlayerInventory>().Collect(PlayerInventory.ITEM_TYPES.KEY_BASIC);
+        gameObject.SetActive(false);
     }
 }
